@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - My Free E-Commerce Store</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        h2 { text-align: center; }
+        .cart-item { background: white; margin: 10px auto; padding: 10px; max-width: 400px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); text-align: center; }
+        .cart-item h3 { margin: 0 0 5px; }
+        .cart-item p { margin: 0; color: green; font-weight: bold; }
+        .checkout { display: block; margin: 20px auto; padding: 10px 20px; background: #2874f0; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Your Cart</h2>
+    <div id="cart-items"></div>
+    <button class="checkout" onclick="checkout()">Proceed to Checkout</button>
+
+    <script>
+        const products = [
+            { id: 1, name: "Headphones", price: 799 },
+            { id: 2, name: "Smart Watch", price: 1499 },
+            { id: 3, name: "Bluetooth Speaker", price: 999 },
+            { id: 4, name: "Backpack", price: 599 }
+        ];
+
+        const cartItemsDiv = document.getElementById('cart-items');
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        if (cart.length === 0) {
+            cartItemsDiv.innerHTML = '<p style="text-align:center;">Your cart is empty.</p>';
+        } else {
+            let total = 0;
+            cart.forEach(id => {
+                const product = products.find(p => p.id === id);
+                if (product) {
+                    total += product.price;
+                    const div = document.createElement('div');
+                    div.className = 'cart-item';
+                    div.innerHTML = `
+                        <h3>${product.name}</h3>
+                        <p>₹${product.price}</p>
+                    `;
+                    cartItemsDiv.appendChild(div);
+                }
+            });
+            const totalDiv = document.createElement('div');
+            totalDiv.className = 'cart-item';
+            totalDiv.innerHTML = `<h3>Total</h3><p>₹${total}</p>`;
+            cartItemsDiv.appendChild(totalDiv);
+        }
+
+        function checkout() {
+            alert('Thank you for your order! Please pay via UPI: yourupi@upi');
+            localStorage.removeItem('cart');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
