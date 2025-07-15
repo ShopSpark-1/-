@@ -53,9 +53,14 @@
         }
 
         function checkout() {
-            alert('Thank you for your order! Please pay via UPI: yourupi@upi');
-            localStorage.removeItem('cart');
-            window.location.href = 'index.html';
+            let totalAmount = 0;
+            cart.forEach(id => {
+                const product = products.find(p => p.id === id);
+                if (product) {
+                    totalAmount += product.price;
+                }
+            });
+            window.location.href = `upi.html?amount=${totalAmount}`;
         }
     </script>
 </body>
