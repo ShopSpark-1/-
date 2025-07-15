@@ -11,12 +11,13 @@
         .cart-item h3 { margin: 0 0 5px; }
         .cart-item p { margin: 0; color: green; font-weight: bold; }
         .checkout { display: block; margin: 20px auto; padding: 10px 20px; background: #2874f0; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        a.upi-link { display: block; margin: 20px auto; padding: 10px 20px; background: #25D366; color: white; text-align: center; text-decoration: none; border-radius: 4px; font-size: 16px; max-width: 250px; }
     </style>
 </head>
 <body>
     <h2>Your Cart</h2>
     <div id="cart-items"></div>
-    <button class="checkout" onclick="checkout()">Proceed to Pay via UPI</button>
+    <a id="upiLink" class="upi-link" target="_blank">Pay via UPI Now</a>
 
     <script>
         const products = [
@@ -27,10 +28,12 @@
         ];
 
         const cartItemsDiv = document.getElementById('cart-items');
+        const upiLinkBtn = document.getElementById('upiLink');
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
         if (cart.length === 0) {
             cartItemsDiv.innerHTML = '<p style="text-align:center;">Your cart is empty.</p>';
+            upiLinkBtn.style.display = 'none';
         } else {
             let total = 0;
             cart.forEach(id => {
@@ -50,21 +53,17 @@
             totalDiv.className = 'cart-item';
             totalDiv.innerHTML = `<h3>Total</h3><p>₹${total}</p>`;
             cartItemsDiv.appendChild(totalDiv);
+
+            // Generate UPI deep link
+            const upiId = 'tanu.9009@ptaxis';
+            const upiUrl = `upi://pay?pa=${upiId}&pn=Tanu%20Kashyap&am=${total}&cu=INR`;
+            upiLinkBtn.href = upiUrl;
         }
 
-        function checkout() {
-            let totalAmount = 0;
-            cart.forEach(id => {
-                const product = products.find(p => p.id === id);
-                if (product) {
-                    totalAmount += product.price;
-                }
-            });
-            const upiId = 'tanu.9009@ptaxis';
-            const upiLink = `upi://pay?pa=${upiId}&pn=Tanu%20Kashyap&am=${totalAmount}&cu=INR`;
-            window.location.href = upiLink;
+        // Optional: Clear cart after payment
+        upiLinkBtn.addEventListener('click', function() {
             localStorage.removeItem('cart');
-        }
+        });
     </script>
 </body>
 </html>
